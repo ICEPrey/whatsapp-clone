@@ -3,7 +3,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { Button } from "@material-ui/core";
 import { MdChatBubble } from "react-icons/md";
 import { FiMoreVertical } from "react-icons/fi";
-import SearchIcon from "@material-ui/icons/Search";
+import { BsSearch } from "react-icons/bs";
 import * as EmailValidator from "email-validator";
 import { auth } from "../firebase";
 
@@ -29,9 +29,8 @@ function Sidebar() {
         <MdChatBubble size={30} />
         <FiMoreVertical size={30} />
       </div>
-
       <div className="rounded-sm flex items-center p-1">
-        <SearchIcon />
+        <BsSearch size={30} />
         <input
           className="rounded-l-full w-full py-4 px-6 text-gray-700 leading-tight focus:outline-none"
           id="search"
@@ -39,7 +38,6 @@ function Sidebar() {
           placeholder="Search For Chat"
         />
       </div>
-
       <Button className="w-full" onClick={createChat}>
         Start A New Chat
       </Button>
