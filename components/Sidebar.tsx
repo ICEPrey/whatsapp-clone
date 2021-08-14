@@ -5,19 +5,41 @@ import { MdChatBubble } from "react-icons/md";
 import { FiMoreVertical } from "react-icons/fi";
 import { BsSearch } from "react-icons/bs";
 import * as EmailValidator from "email-validator";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useCollection } from "react-firebase-hooks/firestore";
 
 function Sidebar() {
-  const createChat = () => {
+  const [user] = useAuthState(auth);
+  const userChatRef = db
+    .collection("chats")
+    .where("users", "array-contains", user.email);
+  const [chatSnapshot] = useCollection(userChatRef);
+  const createChat = (): string => {
     const input = prompt(
       "Please enter an email address for the user you wish to chat with"
     );
 
     if (!input) return null;
 
-    if (EmailValidator.validate(input)) {
+    if (
+      EmailValidator.validate(input) &&
+      !chatAlreadyExists &&
+      input !== user.email
+    ) {
+      db.collection("chats").add({
+        users: [user.email, input],
+      });
     }
   };
+
+  const chatAlreadyExists = (recipientEmail: string) =>
+    !!chatSnapshot?.docs.find(
+      (chat) =>
+        chat.data().users.find((user: string) => user === recipientEmail)
+          ?.length > 0
+    );
+
   return (
     <div>
       <div className="flex sticky top-0 bg-white justify-between items-center p-4 h-20 z-1">
