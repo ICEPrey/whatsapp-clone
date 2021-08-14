@@ -1,8 +1,8 @@
 import React from "react";
-import styled from "styled-components";
-import { Avatar, IconButton, Button } from "@material-ui/core";
-import ChatIcon from "@material-ui/icons/Chat";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import { FaUserCircle } from "react-icons/fa";
+import { Button } from "@material-ui/core";
+import { MdChatBubble } from "react-icons/md";
+import { FiMoreVertical } from "react-icons/fi";
 import SearchIcon from "@material-ui/icons/Search";
 import * as EmailValidator from "email-validator";
 import { auth } from "../firebase";
@@ -19,72 +19,32 @@ function Sidebar() {
     }
   };
   return (
-    <Container>
-      <Header>
-        <UserAvatar onClick={() => auth.signOut()} />
-        <IconsContainer>
-          <IconButton>
-            <ChatIcon />
-            <IconsContainer>
-              <MoreVertIcon />
-            </IconsContainer>
-          </IconButton>
-        </IconsContainer>
-      </Header>
+    <div>
+      <div className="flex sticky top-0 bg-white justify-between items-center p-4 h-20 z-1">
+        <FaUserCircle
+          className="cursor-pointer"
+          onClick={() => auth.signOut()}
+          size={30}
+        />
+        <MdChatBubble size={30} />
+        <FiMoreVertical size={30} />
+      </div>
 
-      <Search>
+      <div className="rounded-sm flex items-center p-1">
         <SearchIcon />
-        <SearchInput placeholder="Search In Chats" />
-      </Search>
+        <input
+          className="rounded-l-full w-full py-4 px-6 text-gray-700 leading-tight focus:outline-none"
+          id="search"
+          type="text"
+          placeholder="Search For Chat"
+        />
+      </div>
 
-      <SidebarButton onClick={createChat}>Start A New Chat</SidebarButton>
-    </Container>
+      <Button className="w-full" onClick={createChat}>
+        Start A New Chat
+      </Button>
+    </div>
   );
 }
 
 export default Sidebar;
-
-const Container = styled.div``;
-
-const Search = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 5px;
-  border-radius: 2px;
-`;
-
-const SidebarButton = styled(Button)`
-  width: 100%;
-  &&& {
-    border-top: 1px solid whitesmoke;
-    border-bottom: 1px solid whitesmoke;
-  }
-`;
-
-const SearchInput = styled.input`
-  outline-width: 0;
-  border: none;
-  flex: 1;
-`;
-
-const Header = styled.div`
-  display: flex;
-  position: sticky;
-  top: 0;
-  background-color: white;
-  z-index: -1;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  height: 88px;
-  border-bottom: 1px solid whitesmoke;
-`;
-
-const UserAvatar = styled(Avatar)`
-  cursor: pointer;
-  :hover {
-    opacity: 0.8;
-  }
-`;
-
-const IconsContainer = styled.div``;
