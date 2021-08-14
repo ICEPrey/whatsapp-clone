@@ -1,5 +1,5 @@
 import React from "react";
-import { FaUserCircle } from "react-icons/fa";
+import Avatar from "@material-ui/core/Avatar";
 import { Button } from "@material-ui/core";
 import { MdChatBubble } from "react-icons/md";
 import { FiMoreVertical } from "react-icons/fi";
@@ -44,10 +44,10 @@ function Sidebar() {
   return (
     <div>
       <div className="flex sticky top-0 bg-white justify-between items-center p-4 h-20 z-1">
-        <FaUserCircle
+        <Avatar
           className="cursor-pointer"
           onClick={() => auth.signOut()}
-          size={30}
+          src={user.photoURL}
         />
         <MdChatBubble size={30} />
         <FiMoreVertical size={30} />
@@ -65,7 +65,7 @@ function Sidebar() {
         Start A New Chat
       </Button>
       {chatsSnapshot?.docs.map((chat) => (
-        <Chat key={chat.id} id={chat.id} user={chat.data().users} />
+        <Chat key={chat.id} id={chat.id} users={chat.data().users} />
       ))}
     </div>
   );
