@@ -12,6 +12,8 @@ import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
 import styled from "styled-components";
 import MicIcon from "@material-ui/icons/Mic";
 import firebase from "firebase";
+import getRecipientEmail from "../utils/getRecipientEmail";
+import Timeago from "timeago-react";
 
 function ChatScreen({ chat, messages }: any) {
   const [user] = useAuthState(auth);
@@ -23,6 +25,12 @@ function ChatScreen({ chat, messages }: any) {
       .doc(router.query.id)
       .collection("messages")
       .orderBy("timestamp", "asc")
+  );
+
+  const [recipientSnapshot] = useCollection(
+    db
+      .collection("users")
+      .where("email", "==", getRecipientEmail(chat.users, user))
   );
 
   const showMessages = () => {
@@ -63,13 +71,31 @@ function ChatScreen({ chat, messages }: any) {
     setInput("");
   };
 
+  const recipient = recipientSnapshot?.docs?.[0]?.data();
+  const recipientEmail = getRecipientEmail(chat.users, user);
+
   return (
     <div>
       <div className="h-5 items-center border-b-1 sticky bg-white z-100 top-0 flex p-1">
-        <Avatar />
+        {recipient ? (
+          <Avatar src={recipient?.photoURL} />
+        ) : (
+          <Avatar>{recipientEmail[0]}</Avatar>
+        )}
         <div className="ml-4f flex-1">
-          <h3 className="mb-1">Rec Email</h3>
-          <p className="text-base text-gray-700	">Last Seen...</p>
+          <h3 className="mb-1">{recipientEmail}</h3>
+          {recipientSnapshot ? (
+            <p>
+              Last Active:{" "}
+              {recipient?.lastSeen?.toDate() ? (
+                <Timeago datetime={recipient?.lastSeen?.toDate()} />
+              ) : (
+                "Unavailable"
+              )}
+            </p>
+          ) : (
+            <p>Loading Last Active...</p>
+          )}
         </div>
         <div>
           <IconButton>
