@@ -4,7 +4,7 @@ import { db, auth } from "../firebase";
 import Avatar from "@material-ui/core/Avatar";
 import { MdAttachFile } from "react-icons/md";
 import { FiMoreVertical } from "react-icons/fi";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import IconButton from "@material-ui/core/IconButton";
 import { useCollection } from "react-firebase-hooks/firestore";
 import Message from "./Message";
@@ -16,6 +16,7 @@ import getRecipientEmail from "../utils/getRecipientEmail";
 import Timeago from "timeago-react";
 
 function ChatScreen({ chat, messages }: any) {
+  const endOfMessageRef = useRef(null);
   const [user] = useAuthState(auth);
   const [input, setInput] = useState("");
   const router = useRouter();
@@ -52,6 +53,13 @@ function ChatScreen({ chat, messages }: any) {
     }
   };
 
+  const scrollToBottom = () => {
+    endOfMessageRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
   const sendMessage = (e: any) => {
     e.preventDefault();
     // update last seen
@@ -69,6 +77,7 @@ function ChatScreen({ chat, messages }: any) {
     });
 
     setInput("");
+    scrollToBottom();
   };
 
   const recipient = recipientSnapshot?.docs?.[0]?.data();
@@ -108,7 +117,7 @@ function ChatScreen({ chat, messages }: any) {
       </div>
       <div className="p-8 bg-white min-h-1">
         {showMessages()}
-        <div />
+        <div ref={endOfMessageRef} />
       </div>
       <form className="flex items-center p-3 sticky bottom-0 bg-white z-100">
         <InsertEmoticonIcon />
@@ -123,6 +132,10 @@ function ChatScreen({ chat, messages }: any) {
 }
 
 export default ChatScreen;
+
+const EndOfMessage = styled.div`
+  margin-bottom: 50px;
+`;
 
 const Input = styled.input`
   flex: 1;
