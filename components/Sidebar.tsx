@@ -42,7 +42,7 @@ function Sidebar() {
     );
 
   return (
-    <div>
+    <div className="flex-1 b border-r-1	h-100v min-w-xs max-w-xs overflow-y-visible">
       <div className="flex sticky top-0 bg-white justify-between items-center p-4 h-20 z-1">
         <Avatar
           className="cursor-pointer"
