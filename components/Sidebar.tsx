@@ -9,6 +9,7 @@ import { auth, db } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
 import Chat from "./Chat";
+import styled from "styled-components";
 
 function Sidebar() {
   const [user] = useAuthState(auth);
@@ -42,8 +43,8 @@ function Sidebar() {
     );
 
   return (
-    <div className="flex-1 b border-r-1	h-100v min-w-xs max-w-xs overflow-y-visible">
-      <div className="flex sticky top-0 bg-white justify-between items-center p-4 h-20 z-1">
+    <Container>
+      <Header>
         <Avatar
           className="cursor-pointer"
           onClick={() => auth.signOut()}
@@ -51,24 +52,68 @@ function Sidebar() {
         />
         <MdChatBubble size={30} />
         <FiMoreVertical size={30} />
-      </div>
-      <div className="rounded-sm flex items-center p-1">
+      </Header>
+      <Search>
         <BsSearch size={30} />
-        <input
-          className="rounded-l-full w-full py-4 px-6 text-gray-700 leading-tight focus:outline-none"
-          id="search"
-          type="text"
-          placeholder="Search For Chat"
-        />
-      </div>
-      <Button className="w-full" onClick={createChat}>
-        Start A New Chat
-      </Button>
+        <SearchInput id="search" type="text" placeholder="Search For Chat" />
+      </Search>
+      <SidebarButton onClick={createChat}>Start A New Chat</SidebarButton>
       {chatsSnapshot?.docs.map((chat) => (
         <Chat key={chat.id} id={chat.id} users={chat.data().users} />
       ))}
-    </div>
+    </Container>
   );
 }
 
 export default Sidebar;
+
+const Container = styled.div`
+  flex: 0.45;
+  border-right: 1px solid whitesmoke;
+  height: 100vh;
+  min-width: 300px;
+  max-width: 350px;
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+`;
+
+const Search = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-radius: 2px;
+`;
+
+const SidebarButton = styled(Button)`
+  width: 100%;
+  border-top: 1px solid whitesmoke;
+  border-bottom: 1px solid whitesmoke;
+  &&& {
+    border-top: 1px solid whitesmoke;
+    border-bottom: 1px solid whitesmoke;
+  }
+`;
+
+const SearchInput = styled.input`
+  outline-width: 0;
+  border: none;
+  flex: 1;
+`;
+
+const Header = styled.div`
+  display: flex;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  height: 80px;
+  border-bottom: 3px solid whitesmoke;
+`;

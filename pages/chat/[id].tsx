@@ -1,6 +1,7 @@
 import Head from "next/head";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import styled from "styled-components";
 import ChatScreen from "../../components/ChatScreen";
 import Sidebar from "../../components/Sidebar";
 import { db, auth } from "../../firebase";
@@ -9,14 +10,14 @@ import getRecipientEmail from "../../utils/getRecipientEmail";
 function Chat({ chat, messages }: any) {
   const [user] = useAuthState(auth);
   return (
-    <div>
+    <div className="flex">
       <Head>
         <title>Chat with {getRecipientEmail(chat.users, user)}</title>
       </Head>
       <Sidebar />
-      <div className="flex">
+      <ChatContainer>
         <ChatScreen chat={chat} messages={messages} />
-      </div>
+      </ChatContainer>
     </div>
   );
 }
@@ -56,3 +57,9 @@ export async function getServerSideProps(context: any) {
     },
   };
 }
+
+const ChatContainer = styled.div`
+  flex: 1;
+  overflow: scroll;
+  height: 100vh;
+`;

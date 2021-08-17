@@ -4,6 +4,7 @@ import Avatar from "@material-ui/core/Avatar";
 import { auth, db } from "../firebase";
 import getRecipientEmail from "../utils/getRecipientEmail";
 import { useRouter } from "next/router";
+import styled from "styled-components";
 
 function Chat({ id, users }: any) {
   const router = useRouter();
@@ -17,18 +18,28 @@ function Chat({ id, users }: any) {
   const recipient = recipientSnapshot?.docs?.[0]?.data();
   const recipientEmail = getRecipientEmail(users, user);
   return (
-    <div
-      onClick={enterChat}
-      className="flex items-center cursor-pointer p-1 break-words hover:text-gray-400"
-    >
+    <Container onClick={enterChat}>
       {recipient ? (
-        <Avatar className="m-5x mr-15px" src={recipient?.photoURL} />
+        <UserAvatar src={recipient?.photoURL} />
       ) : (
-        <Avatar className="m-5x mr-15px" src={recipientEmail[0]} />
+        <UserAvatar src={recipientEmail[0]} />
       )}
       <p>{recipientEmail}</p>
-    </div>
+    </Container>
   );
 }
 
 export default Chat;
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 15px;
+  word-break: break-word;
+`;
+
+const UserAvatar = styled(Avatar)`
+  margin: 5px;
+  margin-right: 15px;
+`;

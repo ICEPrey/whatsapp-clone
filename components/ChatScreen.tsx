@@ -85,13 +85,13 @@ function ChatScreen({ chat, messages }: any) {
 
   return (
     <div>
-      <div className="h-5 items-center border-b-1 sticky bg-white z-100 top-0 flex p-1">
+      <Header>
         {recipient ? (
           <Avatar src={recipient?.photoURL} />
         ) : (
           <Avatar>{recipientEmail[0]}</Avatar>
         )}
-        <div className="ml-4f flex-1">
+        <div className="ml-4 flex-1">
           <h3 className="mb-1">{recipientEmail}</h3>
           {recipientSnapshot ? (
             <p>
@@ -114,19 +114,20 @@ function ChatScreen({ chat, messages }: any) {
             <FiMoreVertical />
           </IconButton>
         </div>
-      </div>
-      <div className="p-8 bg-white min-h-1">
+      </Header>
+      <MessageContainer>
         {showMessages()}
         <div ref={endOfMessageRef} />
-      </div>
-      <form className="flex items-center p-3 sticky bottom-0 bg-white z-100">
+        <EndOfMessage />
+      </MessageContainer>
+      <InputContainer>
         <InsertEmoticonIcon />
         <Input value={input} onChange={(e) => setInput(e.target.value)} />
         <button hidden disabled={!input} type="submit" onClick={sendMessage}>
           Send Message
         </button>
         <MicIcon />
-      </form>
+      </InputContainer>
     </div>
   );
 }
@@ -137,14 +138,41 @@ const EndOfMessage = styled.div`
   margin-bottom: 50px;
 `;
 
-const Input = styled.input`
-  flex: 1;
+const MessageContainer = styled.div`
+  padding: 30px;
+  background-color: #e5ded8;
+  min-height: 90vh;
+`;
+
+const Header = styled.div`
+  position: sticky;
+  background-color: white;
+  z-index: 100;
+  top: 0;
+  display: flex;
+  padding: 11px;
+  height: 80px;
   align-items: center;
-  padding: 10px;
+  border-bottom: 1px solid whitesmoke;
+`;
+
+const InputContainer = styled.form`
+  display: flex;
+  align-items: center;
+  padding: 10;
   position: sticky;
   bottom: 0;
   background-color: white;
-  padding: 10px;
+  z-index: 100;
+`;
+
+const Input = styled.input`
+  flex: 1;
+  outline: 0;
+  border: none;
+  border-radius: 10px;
+  background-color: whitesmoke;
+  padding: 20px;
   margin-left: 15px;
   margin-right: 15px;
 `;
